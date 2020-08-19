@@ -91,13 +91,13 @@ class InstanceInfoReplicator implements Runnable {
                     @Override
                     public void run() {
                         logger.debug("Executing on-demand update of local InstanceInfo");
-    
+
                         Future latestPeriodic = scheduledPeriodicRef.get();
                         if (latestPeriodic != null && !latestPeriodic.isDone()) {
                             logger.debug("Canceling the latest scheduled update, it will be rescheduled at the end of on demand update");
                             latestPeriodic.cancel(false);
                         }
-    
+
                         InstanceInfoReplicator.this.run();
                     }
                 });
@@ -116,8 +116,10 @@ class InstanceInfoReplicator implements Runnable {
         try {
             discoveryClient.refreshInstanceInfo();
 
+            //获取dirty时间戳（之前已经设置isDirty）
             Long dirtyTimestamp = instanceInfo.isDirtyWithTime();
             if (dirtyTimestamp != null) {
+                //进行服务注册
                 discoveryClient.register();
                 instanceInfo.unsetIsDirty(dirtyTimestamp);
             }

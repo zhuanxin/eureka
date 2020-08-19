@@ -81,6 +81,14 @@ public abstract class AbstractJersey2EurekaHttpClient implements EurekaHttpClien
         this.password = localPassword;
     }
 
+    /**
+     * 服务注册，请求rest接口发送服务实例信息
+     * <p>
+     * url：http://localhost:8080/v2/apps/ServiceA
+     *
+     * @param info
+     * @return
+     */
     @Override
     public EurekaHttpResponse<Void> register(InstanceInfo info) {
         String urlPath = "apps/" + info.getAppName();
