@@ -266,6 +266,7 @@ public abstract class AbstractInstanceRegistry implements InstanceRegistry {
             registrant.setActionType(ActionType.ADDED);
             recentlyChangedQueue.add(new RecentlyChangedItem(lease));
             registrant.setLastUpdatedTimestamp();
+            //过期注册表缓存（readWriteCacheMap）
             invalidateCache(registrant.getAppName(), registrant.getVIPAddress(), registrant.getSecureVipAddress());
             logger.info("Registered instance {}/{} with status {} (replication={})",
                     registrant.getAppName(), registrant.getId(), registrant.getStatus(), isReplication);
@@ -305,8 +306,9 @@ public abstract class AbstractInstanceRegistry implements InstanceRegistry {
             Map<String, Lease<InstanceInfo>> gMap = registry.get(appName);
             Lease<InstanceInfo> leaseToCancel = null;
             if (gMap != null) {
-                leaseToCancel = gMap.remove(id);
+                leaseToCancel = gMap.remove(id);//注册列表中移除，并返回
             }
+            //放入recentCanceledQueue
             recentCanceledQueue.add(new Pair<Long, String>(System.currentTimeMillis(), appName + "(" + id + ")"));
             InstanceStatus instanceStatus = overriddenInstanceStatusMap.remove(id);
             if (instanceStatus != null) {
@@ -317,17 +319,20 @@ public abstract class AbstractInstanceRegistry implements InstanceRegistry {
                 logger.warn("DS: Registry: cancel failed because Lease is not registered for: {}/{}", appName, id);
                 return false;
             } else {
-                leaseToCancel.cancel();
+                leaseToCancel.cancel();//设置evictionTimestamp，服务下线时间戳
                 InstanceInfo instanceInfo = leaseToCancel.getHolder();
                 String vip = null;
                 String svip = null;
                 if (instanceInfo != null) {
+                    //服务实例状态设为删除
                     instanceInfo.setActionType(ActionType.DELETED);
+                    // 放入最近变化的队列里，eureka-client定时(30s)获取增量注册表的时候会被同步到client
                     recentlyChangedQueue.add(new RecentlyChangedItem(leaseToCancel));
                     instanceInfo.setLastUpdatedTimestamp();
                     vip = instanceInfo.getVIPAddress();
                     svip = instanceInfo.getSecureVipAddress();
                 }
+                //过期注册表缓存,readWriteCacheMap(每隔30s会被同步到readOnlyCacheMap)
                 invalidateCache(appName, vip, svip);
                 logger.info("Cancelled instance {}/{} (replication={})", appName, id, isReplication);
             }

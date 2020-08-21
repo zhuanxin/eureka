@@ -82,7 +82,7 @@ public class EurekaBootStrap implements ServletContextListener {
 
     protected volatile EurekaServerContext serverContext;
     protected volatile AwsBinder awsBinder;
-    
+
     private EurekaClient eurekaClient;
 
     /**
@@ -91,10 +91,10 @@ public class EurekaBootStrap implements ServletContextListener {
     public EurekaBootStrap() {
         this(null);
     }
-    
+
     /**
      * Construct an instance of eureka bootstrap with the supplied eureka client
-     * 
+     *
      * @param eurekaClient the eureka client to bootstrap
      */
     public EurekaBootStrap(EurekaClient eurekaClient) {
@@ -241,6 +241,7 @@ public class EurekaBootStrap implements ServletContextListener {
          */
         // Copy registry from neighboring eureka node
         int registryCount = registry.syncUp();
+
         registry.openForTraffic(applicationInfoManager, registryCount);
 
         //注册所有的监控统计项
@@ -265,7 +266,7 @@ public class EurekaBootStrap implements ServletContextListener {
                 serverCodecs,
                 applicationInfoManager
         );
-        
+
         return peerEurekaNodes;
     }
 

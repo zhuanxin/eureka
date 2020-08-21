@@ -129,7 +129,7 @@ public class ResponseCacheImpl implements ResponseCache {
         long responseCacheUpdateIntervalMs = serverConfig.getResponseCacheUpdateIntervalMs();
         this.readWriteCacheMap =
                 CacheBuilder.newBuilder().initialCapacity(serverConfig.getInitialCapacityOfResponseCache())
-                        .expireAfterWrite(serverConfig.getResponseCacheAutoExpirationInSeconds(), TimeUnit.SECONDS)
+                        .expireAfterWrite(serverConfig.getResponseCacheAutoExpirationInSeconds(), TimeUnit.SECONDS)//自动移除存在180s（默认）的缓存
                         .removalListener(new RemovalListener<Key, Value>() {
                             @Override
                             public void onRemoval(RemovalNotification<Key, Value> notification) {
@@ -153,6 +153,7 @@ public class ResponseCacheImpl implements ResponseCache {
                         });
 
         if (shouldUseReadOnlyResponseCache) {
+            //定时任务，默认30s比对readOnlyCacheMap和readWriteCacheMap，将readWriteCacheMap更新到readOnlyCacheMap
             timer.schedule(getCacheUpdateTask(),
                     new Date(((System.currentTimeMillis() / responseCacheUpdateIntervalMs) * responseCacheUpdateIntervalMs)
                             + responseCacheUpdateIntervalMs),
