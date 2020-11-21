@@ -31,7 +31,6 @@ import org.slf4j.LoggerFactory;
  * their instance with eureka server.
  *
  * @author Karthik Ranganathan
- *
  */
 public abstract class AbstractInstanceConfig implements EurekaInstanceConfig {
     private static final Logger logger = LoggerFactory.getLogger(AbstractInstanceConfig.class);
@@ -41,15 +40,40 @@ public abstract class AbstractInstanceConfig implements EurekaInstanceConfig {
      */
     @Deprecated
     public static final String DEFAULT_NAMESPACE = CommonConstants.DEFAULT_CONFIG_NAMESPACE;
-    
+
+    /**
+     * 租约过期时间
+     */
     private static final int LEASE_EXPIRATION_DURATION_SECONDS = 90;
+    /**
+     * 租约续约间隔
+     */
     private static final int LEASE_RENEWAL_INTERVAL_SECONDS = 30;
+    /**
+     * 应用启用 HTTPS 端口
+     */
     private static final boolean SECURE_PORT_ENABLED = false;
+    /**
+     * 应用启用 HTTP 端口
+     */
     private static final boolean NON_SECURE_PORT_ENABLED = true;
+    /**
+     * 应用默认HTTP端口
+     */
     private static final int NON_SECURE_PORT = 80;
     private static final int SECURE_PORT = 443;
+    /**
+     * 实例初始化后启用
+     */
     private static final boolean INSTANCE_ENABLED_ON_INIT = false;
+    /**
+     * 主机相关信息
+     */
     private static final Pair<String, String> hostInfo = getHostInfo();
+
+    /**
+     * 数据中心，默认myOwn
+     */
     private DataCenterInfo info = new DataCenterInfo() {
         @Override
         public Name getName() {
@@ -211,8 +235,14 @@ public abstract class AbstractInstanceConfig implements EurekaInstanceConfig {
         return hostInfo.first();
     }
 
-    public boolean shouldBroadcastPublicIpv4Addr () { return false; }
+    public boolean shouldBroadcastPublicIpv4Addr() {
+        return false;
+    }
 
+    /**
+     *
+     * @return   ip:host
+     */
     private static Pair<String, String> getHostInfo() {
         Pair<String, String> pair;
         try {

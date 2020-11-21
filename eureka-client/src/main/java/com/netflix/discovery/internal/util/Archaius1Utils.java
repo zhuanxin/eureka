@@ -22,6 +22,7 @@ public final class Archaius1Utils {
 
     /**
      * 加载eureka-client.properties以及环境配置
+     * 首先读取 ${eureka.client.props}.properties 配置 ，在读取 ${eureka.client.props}-${eureka.environment}.properties，相同则覆盖
      * @param configName
      * @return
      */
@@ -35,6 +36,7 @@ public final class Archaius1Utils {
 
         String eurekaPropsFile = EUREKA_PROPS_FILE.get();
         try {
+            //首先读取 ${eureka.client.props}.properties 配置 ，在读取 ${eureka.client.props}-${eureka.environment}.properties，相同则覆盖
             ConfigurationManager.loadCascadedPropertiesFromResources(eurekaPropsFile);
         } catch (IOException e) {
             logger.warn(

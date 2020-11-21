@@ -35,9 +35,9 @@ import com.google.inject.ImplementedBy;
  * Note that all configurations are not effective at runtime unless and
  * otherwise specified.
  * </p>
+ * Eureka 应用实例配置接口
  *
  * @author Karthik Ranganathan
- *
  */
 @ImplementedBy(CloudInstanceConfig.class)
 public interface EurekaInstanceConfig {
@@ -67,7 +67,7 @@ public interface EurekaInstanceConfig {
      * Indicates whether the instance should be enabled for taking traffic as
      * soon as it is registered with eureka. Sometimes the application might
      * need to do some pre-processing before it is ready to take traffic.
-     *
+     * <p>
      * :( public API typos are the worst. I think this was meant to be "OnInit".
      *
      * @return true to immediately start taking traffic, false otherwise.
@@ -95,7 +95,7 @@ public interface EurekaInstanceConfig {
      * traffic or not.
      *
      * @return true if the <code>non-secure</code> port is enabled, false
-     *         otherwise.
+     * otherwise.
      */
     boolean isNonSecurePortEnabled();
 
@@ -119,7 +119,7 @@ public interface EurekaInstanceConfig {
      * Note that the instance could still not take traffic if it implements
      * {@link HealthCheckCallback} and then decides to make itself unavailable.
      * </p>
-     *
+     * 租约续约频率
      * @return time in seconds
      */
     int getLeaseRenewalIntervalInSeconds();
@@ -137,7 +137,7 @@ public interface EurekaInstanceConfig {
      * the value specified in {@link #getLeaseRenewalIntervalInSeconds()}
      * .
      * </p>
-     *
+     * 租约过期时间
      * @return value indicating time in seconds.
      */
     int getLeaseExpirationDurationInSeconds();
@@ -153,7 +153,7 @@ public interface EurekaInstanceConfig {
      * </p>
      *
      * @return the string indicating the virtual host name which the clients use
-     *         to call this service.
+     * to call this service.
      */
     String getVirtualHostName();
 
@@ -168,7 +168,7 @@ public interface EurekaInstanceConfig {
      * </p>
      *
      * @return the string indicating the secure virtual host name which the
-     *         clients use to call this service.
+     * clients use to call this service.
      */
     String getSecureVirtualHostName();
 
@@ -186,11 +186,10 @@ public interface EurekaInstanceConfig {
      * Gets the hostname associated with this instance. This is the exact name
      * that would be used by other instances to make calls.
      *
-     * @param refresh
-     *            true if the information needs to be refetched, false
-     *            otherwise.
+     * @param refresh true if the information needs to be refetched, false
+     *                otherwise.
      * @return hostname of this instance which is identifiable by other
-     *         instances for making remote calls.
+     * instances for making remote calls.
      */
     String getHostName(boolean refresh);
 
@@ -208,7 +207,7 @@ public interface EurekaInstanceConfig {
      * deployed in AWS.
      *
      * @return information that indicates which data center this instance is
-     *         deployed in.
+     * deployed in.
      */
     DataCenterInfo getDataCenterInfo();
 
@@ -363,12 +362,13 @@ public interface EurekaInstanceConfig {
      * implementing DataCenterInfo types.
      *
      * @return an ordered list of fields that should be used to preferentially
-     *         resolve this instance's default address, empty String[] for default.
+     * resolve this instance's default address, empty String[] for default.
      */
     String[] getDefaultAddressResolutionOrder();
 
     /**
      * Get the namespace used to find properties.
+     *
      * @return the namespace used to find properties.
      */
     String getNamespace();

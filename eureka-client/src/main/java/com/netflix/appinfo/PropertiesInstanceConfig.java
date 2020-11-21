@@ -15,15 +15,15 @@
  */
 package com.netflix.appinfo;
 
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 import com.netflix.config.ConfigurationManager;
 import com.netflix.config.DynamicPropertyFactory;
 import com.netflix.discovery.CommonConstants;
 import com.netflix.discovery.internal.util.Archaius1Utils;
 import org.apache.commons.configuration.Configuration;
+
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import static com.netflix.appinfo.PropertyBasedInstanceConfigConstants.*;
 
@@ -44,17 +44,30 @@ import static com.netflix.appinfo.PropertyBasedInstanceConfigConstants.*;
  * <em>eureka-client-<eureka.environment>.properties</em> is loaded in addition
  * to <em>eureka-client.properties</em>.
  * </p>
+ * <p>
+ * 配置文件类
  *
  * @author Karthik Ranganathan
- *
  */
 public abstract class PropertiesInstanceConfig extends AbstractInstanceConfig implements EurekaInstanceConfig {
 
+    /**
+     * 命名空间
+     */
     protected final String namespace;
+    /**
+     * 配置文件对象
+     */
     protected final DynamicPropertyFactory configInstance;
+    /**
+     * 服务分组
+     * <p>
+     * 从 环境变量 获取
+     */
     private String appGrpNameFromEnv;
 
     public PropertiesInstanceConfig() {
+        //默认命名空间 eureka
         this(CommonConstants.DEFAULT_CONFIG_NAMESPACE);
     }
 
@@ -76,7 +89,7 @@ public abstract class PropertiesInstanceConfig extends AbstractInstanceConfig im
 
         appGrpNameFromEnv = ConfigurationManager.getConfigInstance()
                 .getString(FALLBACK_APP_GROUP_KEY, Values.UNKNOWN_APPLICATION);
-
+        //初始化配置文件,未指定配置文件默认加载eureka-client.properties
         this.configInstance = Archaius1Utils.initConfig(CommonConstants.CONFIG_FILE_NAME);
     }
 
@@ -296,6 +309,7 @@ public abstract class PropertiesInstanceConfig extends AbstractInstanceConfig im
 
     /**
      * Indicates if the public ipv4 address of the instance should be advertised.
+     *
      * @return true if the public ipv4 address of the instance should be advertised, false otherwise .
      */
     public boolean shouldBroadcastPublicIpv4Addr() {

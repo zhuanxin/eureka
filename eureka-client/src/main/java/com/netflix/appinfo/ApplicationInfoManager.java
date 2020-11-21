@@ -57,6 +57,9 @@ public class ApplicationInfoManager {
 
     private static ApplicationInfoManager instance = new ApplicationInfoManager(null, null, null);
 
+    /**
+     * 状态变更监听器
+     */
     protected final Map<String, StatusChangeListener> listeners;
     private final InstanceStatusMapper instanceStatusMapper;
 
@@ -227,7 +230,7 @@ public class ApplicationInfoManager {
                         newSpotInstanceAction));
                 updateInstanceInfo(null , null );
             }
-        }        
+        }
     }
 
     private void updateInstanceInfo(String newAddress, String newIp) {

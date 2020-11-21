@@ -46,6 +46,7 @@ public class EurekaConfigBasedInstanceInfoProvider implements Provider<InstanceI
     public synchronized InstanceInfo get() {
         if (instanceInfo == null) {
             // Build the lease information to be passed to the server based on config
+            //构建租约builder,设置间隔、过期时间
             LeaseInfo.Builder leaseInfoBuilder = LeaseInfo.Builder.newBuilder()
                     .setRenewalIntervalInSecs(config.getLeaseRenewalIntervalInSeconds())
                     .setDurationInSecs(config.getLeaseExpirationDurationInSeconds());
@@ -55,6 +56,7 @@ public class EurekaConfigBasedInstanceInfoProvider implements Provider<InstanceI
             }
 
             // Builder the instance information to be registered with eureka server
+            //服务实例builder
             InstanceInfo.Builder builder = InstanceInfo.Builder.newBuilder(vipAddressResolver);
 
             // set the appropriate id for the InstanceInfo, falling back to datacenter Id if applicable, else hostname
@@ -93,7 +95,7 @@ public class EurekaConfigBasedInstanceInfoProvider implements Provider<InstanceI
                     .setSecurePort(config.getSecurePort())
                     .enablePort(PortType.SECURE, config.getSecurePortEnabled())
                     .setVIPAddress(config.getVirtualHostName())
-                    .setSecureVIPAddress(config.getSecureVirtualHostName())
+                    .setSecureVIPAddress(config.getSecureVirtualHostName())  //VIPAddress
                     .setHomePageUrl(config.getHomePageUrlPath(), config.getHomePageUrl())
                     .setStatusPageUrl(config.getStatusPageUrlPath(), config.getStatusPageUrl())
                     .setASGName(config.getASGName())
@@ -102,6 +104,7 @@ public class EurekaConfigBasedInstanceInfoProvider implements Provider<InstanceI
 
 
             // Start off with the STARTING state to avoid traffic
+            //设置服务实例状态
             if (!config.isInstanceEnabledOnit()) {
                 InstanceStatus initialStatus = InstanceStatus.STARTING;
                 LOG.info("Setting initial instance status as: {}", initialStatus);
@@ -113,6 +116,7 @@ public class EurekaConfigBasedInstanceInfoProvider implements Provider<InstanceI
             }
 
             // Add any user-specific metadata information
+            // 添加 配置元数据集合
             for (Map.Entry<String, String> mapEntry : config.getMetadataMap().entrySet()) {
                 String key = mapEntry.getKey();
                 String value = mapEntry.getValue();
